@@ -1,6 +1,4 @@
 # Shiny_App
-
-<br>
 <br>
 
 #### This repository holds the Shiny application created for the final project in the Developing Data Products course
@@ -13,7 +11,6 @@ The application creates an interactive simulation for random sampling from diffe
 The application is hosted on the RStudio's Shiny Server.
 
 #### You can run the simulation by going to the following URL <b><i><u><https://mdlm1951.shinyapps.io/DDP_final/></u></i></b>
-<br>
 <br>
 
 This repository also contains the Rstudio Presentation file, named <em><b>index.Rpres</b></em>, used to produce the required slide presentation
