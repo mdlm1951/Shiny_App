@@ -1,0 +1,132 @@
+Developing Data Products Final Presentation
+========================================================
+author: Mark De La Mater
+date: May 3, 2018
+autosize: true
+
+
+<p style="text-align: center;"> 
+
+Exploring the Central Limit Theorem
+
+</p>
+
+Project Overview
+===
+
+
+ 1. The goal of the project was to provide an easy to use simulation tool for exploring the Central Limit Theorem <b>(CLT)</b>
+ 2. The practial aspect we chose to focus on was the visible influcence of the CLT when sampling from popultions where the underlying population distribution is other than normal
+ 3. The approach taken was to provide a simulated <b>"Experimental Workbench"</b> where a student can simulate a sampling experiment by:
++ Selecting an underlying <b>Population</b> from which to sample
++ Selecting the <b>Sample Size</b>
++ Selecting the <b>Number of Samples</b> for replication
+
+
+
+Screen Shot of Simulation Interface
+========================================================
+
+![alt text](ECLT_Tab2.png)
+
+
+
+Key Elements of the R Code
+========================================================
+
+Creating the underlying Populations
+```{r, echo = TRUE, eval = FALSE}
+set.seed(12345)
+target_mean <- 10
+target_sd <- 2
+pop_norm <- rnorm(100000, target_mean, target_sd)
+pop_unif <- runif(100000, 0, (2 * target_mean))
+pop_chix <- rchisq(100000, target_mean)
+```
+
+***
+
+Simulating Sampling from a Population
+```{r, echo = TRUE, eval = FALSE}
+sample_distribution <- function(population, samp_size, num_samps) {
+  results <- numeric(num_samps)
+  for (i in 1:num_samps) {
+    samp <- sample(population, size = samp_size, replace = FALSE)
+    samp_mean <- mean(samp)
+    results[i] <- samp_mean
+  }
+  return(results)  
+}  ## End Function
+```
+
+
+
+Example of Output from R Code
+========================================================
+<small>Plot of Population Distribution</small>
+```{r, echo=FALSE}
+target_mean <- 10
+target_sd <- 2
+pop_unif <- runif(100000, 0, (2 * target_mean))
+dist <- pop_unif
+dist_title <- "Uniform Distributed Population"
+
+sample_distribution <- function(population, samp_size, num_samps) {
+  results <- numeric(num_samps)
+  for (i in 1:num_samps) {
+    samp <- sample(population, size = samp_size, replace = FALSE)
+    samp_mean <- mean(samp)
+    results[i] <- samp_mean
+  }
+  return(results)  
+}  ## End Function
+
+sample_size = 30
+number_of_samples = 50
+
+mySample <- sample_distribution(dist, sample_size, number_of_samples)
+
+plot(density(dist), main = dist_title, xlab = "Individual Value")
+      legend("topright", legend = c(paste("Population Mean = ", round(mean(dist), 1), sep = ""),
+                                    paste("Population SD = ", round(sd(dist), 1), sep = "")),
+                                    box.lwd = 3, box.col = 'red', inset = c(0, 0))
+      abline(v = mean(dist), col = "red", lwd = 4)
+
+```
+
+***
+<small>Histogram of Sample Distribution</small>
+```{r, echo=FALSE}
+set.seed(1234)
+target_mean <- 10
+target_sd <- 2
+pop_unif <- runif(100000, 0, (2 * target_mean))
+dist <- pop_unif
+dist_title <- "Uniform Distributed Population"
+
+sample_distribution <- function(population, samp_size, num_samps) {
+  results <- numeric(num_samps)
+  for (i in 1:num_samps) {
+    samp <- sample(population, size = samp_size, replace = FALSE)
+    samp_mean <- mean(samp)
+    results[i] <- samp_mean
+  }
+  return(results)  
+}  ## End Function
+
+sample_size = 30
+number_of_samples = 50
+
+mySample <- sample_distribution(dist, sample_size, number_of_samples)
+
+dist_sd <- sd(dist)
+
+hist(mySample, main = "Distribution of Sample Means", col = "lightblue", xlab = "Sample Mean", xlim = c(min(dist), max(dist)))
+     legend("topright", legend = c(paste("Sampling Distribution Mean =", round(mean(mySample), 3), sep = ""),
+                                   paste("Sampling Distribution SD =", round(sd(mySample), 3), sep = ""),
+                                   paste("Calculated SE of Mean =", round((dist_sd / sqrt(sample_size)), 3), sep = "")),
+                                   box.lwd = 3, box.col = "blue", inset = c(0, 0))
+     abline(v = mean(mySample), col = "blue", lwd = 4)
+```
+
+
